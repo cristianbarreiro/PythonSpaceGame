@@ -26,6 +26,16 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player.left > 0:
+        player.x -= 5
+    if keys[pygame.K_RIGHT] and player.right > 0:
+        player.x += 5
+    if keys[pygame.K_UP] and player.top > 0:
+        player.y -= 5
+    if keys[pygame.K_DOWN] and player.bottom > 0:
+        player.y += 5
+
     screen.fill(BLACK)
     pygame.draw.rect(screen, WHITE, player)
 
