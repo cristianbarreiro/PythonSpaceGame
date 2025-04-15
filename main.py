@@ -14,8 +14,8 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
 # Jugador
-player_width = 50
-player_height = 50
+player_width = 35
+player_height = 80
 
 # Cargar imágenes
 player_img = pygame.image.load("spaceship.png").convert_alpha()
@@ -25,9 +25,11 @@ bg_img = pygame.image.load("bg-purple.png")
 #Define las nuevas dimensiones
 player_size = (80, 80) # Nuevo tamaño para la imagen del jugador
 meteor_size = (85, 85) # Nuevo tamaño para la imagen del meteorito
+bg_size = (800, 600)
 
 player_img = pygame.transform.scale(player_img, player_size)
 meteor_img = pygame.transform.scale(meteor_img, meteor_size)
+bg_img = pygame.transform.scale(bg_img, bg_size)
 
 # Meteoritos
 meteor_width = 30
