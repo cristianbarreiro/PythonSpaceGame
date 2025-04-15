@@ -22,6 +22,9 @@ meteor_width = 30
 meteor_height = 30
 meteors = []
 
+# Puntuación
+score = 0
+font = pygame.font.Font(None, 36)
 
 player = pygame.Rect(WIDTH // 2 - player_width // 2,
                      HEIGHT - player_height - 10, player_width, player_height)
@@ -45,7 +48,7 @@ while running:
         player.y += 5
 
     # Generar meteoritos
-    if len(meteors) < 7:
+    if len(meteors) < 5:
         meteor = pygame.Rect(random.randint(0, WIDTH - meteor_width),
                              0, meteor_width, meteor_height)
         meteors.append(meteor)
@@ -55,6 +58,15 @@ while running:
         meteor.y += 5
         if meteor.top > HEIGHT:
             meteors.remove(meteor)
+
+    # Detectar colisiones
+    for meteor in meteors:
+        if player.colliderect(meteor):
+            running = False
+
+    # Mostrar puntuación
+    score_text = font.render(f"Puntuación: {score}", True, WHITE)
+    screen.blit(score_text, (10, 10))
 
     screen.fill(BLACK)
     pygame.draw.rect(screen, WHITE, player)
