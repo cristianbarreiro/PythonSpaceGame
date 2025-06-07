@@ -94,15 +94,6 @@ def create_meteor():
     }
     return meteor
 
-def get_points():
-    # Puntos base según el nivel
-    if level == 1:
-        return 5  # 5 puntos por meteorito que pasa
-    elif level == 2:
-        return 10  # 10 puntos por meteorito que pasa
-    else:  # nivel 3
-        return 15  # 15 puntos por meteorito que pasa
-
 def get_destroy_points():
     # Puntos por destruir meteorito según el nivel
     if level == 1:
@@ -158,7 +149,6 @@ while running:
             meteor['rect'].y += meteor['speed']
             if meteor['rect'].top > HEIGHT:
                 meteors.remove(meteor)
-                score += get_points()
 
         # Mover balas
         for bullet in bullets[:]:
