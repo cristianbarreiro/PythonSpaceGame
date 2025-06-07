@@ -12,6 +12,7 @@ pygame.display.set_caption("Lluvia Espacial")
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
+YELLOW = (255, 255, 0)
 
 # Jugador
 player_width = 35
@@ -36,6 +37,12 @@ meteor_width = 30
 meteor_height = 30
 meteors = []
 
+# Balas
+bullets = []
+bullet_width = 5
+bullet_height = 15
+bullet_speed = 7
+
 # Puntuación
 score = 0
 font = pygame.font.Font(None, 36)
@@ -50,15 +57,23 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        # Disparar con la barra espaciadora
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                bullet = pygame.Rect(player.centerx - bullet_width//2,
+                                   player.top,
+                                   bullet_width,
+                                   bullet_height)
+                bullets.append(bullet)
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT] and player.left > 0:
         player.x -= 5
-    if keys[pygame.K_RIGHT] and player.right > 0:
+    if keys[pygame.K_RIGHT] and player.right < WIDTH:
         player.x += 5
     if keys[pygame.K_UP] and player.top > 0:
         player.y -= 5
-    if keys[pygame.K_DOWN] and player.bottom > 0:
+    if keys[pygame.K_DOWN] and player.bottom < HEIGHT:
         player.y += 5
 
     # Generar meteoritos
@@ -68,26 +83,44 @@ while running:
         meteors.append(meteor)
 
     # Mover meteoritos
-    for meteor in meteors:
+    for meteor in meteors[:]:
         meteor.y += 5
         if meteor.top > HEIGHT:
             meteors.remove(meteor)
             score += 1
 
-    # Detectar colisiones
+    # Mover balas
+    for bullet in bullets[:]:
+        bullet.y -= bullet_speed
+        if bullet.bottom < 0:
+            bullets.remove(bullet)
+
+    # Detectar colisiones balas-meteoritos
+    for bullet in bullets[:]:
+        for meteor in meteors[:]:
+            if bullet.colliderect(meteor):
+                if bullet in bullets:
+                    bullets.remove(bullet)
+                if meteor in meteors:
+                    meteors.remove(meteor)
+                score += 2
+                break
+
+    # Detectar colisiones jugador-meteoritos
     for meteor in meteors:
         if player.colliderect(meteor):
             running = False
 
     screen.fill(BLACK)
-
     screen.blit(bg_img, (0, 0))
 
-    #pygame.draw.rect(screen, WHITE, player)
+    # Dibujar balas
+    for bullet in bullets:
+        pygame.draw.rect(screen, YELLOW, bullet)
+
     screen.blit(player_img, player)
     for meteor in meteors:
         screen.blit(meteor_img, meteor)
-        #pygame.draw.rect(screen, RED, meteor)
 
     # Mostrar puntuación
     score_text = font.render(f"Puntuación: {score}", True, WHITE)
